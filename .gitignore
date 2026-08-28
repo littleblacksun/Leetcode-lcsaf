@@ -1,0 +1,4 @@
+.reasonix/
+.obsidian/workspace.json
+__pycache__/
+*.py[cod]
