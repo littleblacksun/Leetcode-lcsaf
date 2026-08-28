@@ -9,18 +9,43 @@
 
 ## 推送当前项目
 
-1. 在项目根目录确认状态：`git status`。
-2. 先同步远程分支；如果远程已有新提交，使用 `git pull --rebase origin main` 处理后再继续。不要使用强制推送。
+1. 在项目根目录确认状态：`git status`。若工作区干净，先使用 `git pull --rebase origin main` 同步远程分支，再开始编辑。
+2. 若工作区已有待提交修改，不要丢弃或暂存后强制同步；完成检查、提交后再执行 rebase 同步。
 3. 检查将要提交的内容，避免上传 `.reasonix/`、`.obsidian/workspace.json`、密钥或其他本机临时文件。
 4. 更新 `README.md`（规则见下文），然后执行：
 
    ```powershell
    git add -A
    git commit -m "Update LeetCode study notes"
+   git pull --rebase origin main
    git push origin main
    ```
 
-5. 推送后运行 `git status -sb`，确认工作区干净且 `main` 与 `origin/main` 已同步。
+5. rebase 出现冲突时，解决冲突、`git add <文件>`，再执行 `git rebase --continue`；不要使用强制推送。
+6. 推送后运行 `git status -sb`，确认工作区干净且 `main` 与 `origin/main` 已同步。
+
+## GitHub 图片显示兼容
+
+Obsidian 的双中括号图片嵌入语法（`!` 后接 `[[figure/image.png]]`）不是标准 Markdown，GitHub 会把它当作普通文本显示。为了同时兼容 Obsidian 与 GitHub，笔记中的图片必须使用标准 Markdown 语法。
+
+1. 将 Obsidian 图片嵌入改为标准链接。例如：
+
+   ```md
+   <!-- 不要使用 Obsidian 的双中括号图片嵌入：GitHub 不会渲染 -->
+
+   <!-- 使用：Obsidian 与 GitHub 都能显示 -->
+   ![题目截图](./figure/Pasted%20image%2020260828113445.png)
+   ```
+
+2. 图片路径相对于当前 Markdown 文件书写，统一使用 `/`。路径中有空格时使用 `%20`，例如 `Pasted%20image.png`；其他 URL 特殊字符也应进行百分号编码。
+3. 图片文件必须实际位于仓库中并被 Git 跟踪。`figure/` 目录不要加入 `.gitignore`。
+4. 推送前检查是否仍有 Obsidian 图片嵌入，并检查图片链接是否存在：
+
+   ```powershell
+   rg -n --glob '*.md' --glob '!.reasonix/**' '!\[\[[^\]]+\]\]'
+   ```
+
+   上述命令应没有输出；随后使用 GitHub 网页预览已修改的 Markdown，确认图片正常显示。
 
 ## README.md 更新规则
 
