@@ -1,4 +1,5 @@
 .reasonix/
 .obsidian/workspace.json
+.workbuddy/
 __pycache__/
 *.py[cod]
